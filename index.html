@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/css/materialize.min.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="build/css/nouislider.min.css">
+	<link rel="stylesheet" type="text/css" href="build/css/style.css">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/js/materialize.min.js"></script>
+	<script type="text/javascript" src="build/js/jquery.typing-0.2.0.min.js"></script>
+	<script type="text/javascript" src="build/js/mustache.min.js"></script>
+	<script type="text/javascript" src="build/js/nouislider.min.js"></script>
+	<script type="text/javascript" src="build/js/engine.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+</head>
+<body>
+	<!-- Script template areas -->
+	<script id="optionCity" type="x-tmpl-mustache">
+		{{#data}}
+		<option value="{{city}}">{{city}}</option>
+		{{/data}}
+	</script>
+	<script id="optionTown" type="x-tmpl-mustache">
+		{{#data}}
+		<option value="{{town}}">{{town}}</option>
+		{{/data}}
+	</script>
+	<script id="agentListTmpl" type="x-tmpl-mustache">
+		{{#data}}
+		<li class="collection-item avatar row" agentEmail="{{email}}">
+			<div class="col s9 m10">
+			<span class="agentTitle">{{bname}}</span>
+			<p class="agentContent">{{aname}}</p>
+			<p class="agentContent">{{phoneno}}
+			{{#altno}}/{{altno}}{{/altno}}
+			</p>
+			<address class="agentLocality">{{locality}}</address>
+			</div>
+			<div class="col s3 m2 center">
+			<span class="material-icons circle center light-blue darken-1">{{firstCharacter}}</span>
+			{{#propertycount}}
+			<p>{{propertycount}} properties</p>
+			{{/propertycount}}
+			</div>
+		</li>
+		{{/data}}
+		{{^data}}
+		<p class="center">No agent for this area</p>
+		{{/data}}
+	</script>
+	<!--  -->
+	<script id="propertyListTmpl" type="x-tmpl-mustache">
+		{{#data}}
+		<li class="collection-item avatar row" pid="{{pid}}">
+			<div class="col s12 tabHead">
+			<p class="propertyDate">{{Date}}</p>
+			<span class="propertyTitle">{{Cost}}</span>
+			<p class="propertyMeta">{{Type}}<span class="coloredSeparator">|</span>{{Locality}}<span class="coloredSeparator">|</span>{{Area}}<span class="coloredSeparator">|</span>{{Floor}}</p>
+			<p class="propertyAddress">{{Address}}</p>
+			<p class="propertyBrokerage">{{Rescom}} | {{Brokerage}}</p>
+			<p class="callToAction"><i class="material-icons dp48">contact_phone</i> Click to view contact information</p>
+			<a href="whatsapp://send?text={{propertyMessage}}" data-action="share/whatsapp/share" class="hide-on-large-only"><i class="fa fa-whatsapp"></i>Share via Whatsapp</a>
+			</div>
+		</li>
+		<div class="row tabBody grey darken-4">
+		<div class="col s6">
+		<p class="propertyTitle">Contact:</p>
+		{{#agentinfo}}
+			<p>{{bname}}</p>
+			<p>{{aname}}</p>
+			<p>{{phoneno}}
+			{{#altno}} / {{altno}} {{/altno}}
+			</p>
+		{{/agentinfo}}
+		</div>
+		</div>
+		{{/data}}
+		{{^data}}
+		<p class="center">No properties in this area</p>
+		{{/data}}
+	</script>
+	<script id="propertyRentListTmpl" type="x-tmpl-mustache">
+		{{#data}}
+		<li class="collection-item avatar row" pid="{{pid}}">
+			<div class="col s12 tabHead">
+			<p class="propertyDate">{{Date}}</p>
+			<span class="propertyTitle">{{Rent}}/{{Deposite}}</span>
+			<p class="propertyMeta">{{Type}}<span class="coloredSeparator">|</span>{{Locality}}<span class="coloredSeparator">|</span>{{Area}}<span class="coloredSeparator">|</span>{{Floor}}</p>
+			<p class="propertyAddress">{{Address}}</p>
+			<p class="propertyBrokerage">{{Rescom}}|{{Brokerage}}</p>
+			<p class="callToAction"><i class="material-icons dp48">contact_phone</i> Click to view contact information</p>
+			<a href="whatsapp://send?text={{propertyMessage}}" data-action="share/whatsapp/share" class="hide-on-large-only"><i class="fa fa-whatsapp"></i>Share via Whatsapp</a>
+			</div>
+		</li>
+		<div class="row tabBody grey darken-4">
+		<div class="col s6">
+		<p class="propertyTitle">Contact:</p>
+		{{#agentinfo}}
+			<p>{{bname}}</p>
+			<p>{{aname}}</p>
+			<p>{{phoneno}}
+			{{#altno}} / {{altno}} {{/altno}}
+			</p>
+		{{/agentinfo}}
+		</div>
+		</div>
+		{{/data}}
+		{{^data}}
+		<p class="center">No properties in this area</p>
+		{{/data}}
+	</script>
+	<script id="agentInfoTmpl" type="x-tmpl-mustache">
+		{{#data}}
+		<section id="agentInfo" class="row grey darken-4 fixedHeader">
+			<h5 class="agentTitle">{{bname}}</h5>
+			<div class="col s4 m2 right infoLogo center">
+				<span class="material-icons circle center light-blue darken-1">{{firstCharacter}}</span>
+				{{#propertycount}}
+				<p>{{propertycount}} properties</p>
+				{{/propertycount}}
+			</div>
+			<div class="col s8 m10">
+				<h6>{{aname}}</h3>
+				<p>{{phoneno}} {{#altno}}/ {{altno}}{{/altno}}</p>
+				<address class="agentLocality">{{locality}}</address>
+				<a href="whatsapp://send?text={{message}}" data-action="share/whatsapp/share" class="hide-on-large-only"><i class="fa fa-whatsapp"></i>Share via Whatsapp</a>
+			</div>
+			<div class="col s12 row light-blue darken-1 agentTab">
+				<div class="col s6 m3"><a href="!#" class="triggerAgentSell btn col s12 light-blue darken-1" email="{{email}}">Sell</a></div>
+				<div class="col s6 m3"><a href="!#" class="triggerAgentRent btn col s12 light-blue darken-1" email="{{email}}">Rent</a></div>
+			</div>
+		</section>
+		<div class="agentProperties">
+				<ul class="collection">
+				{{#properties}}
+					<li class="collection-item row" pid="{{pid}}">
+						<div class="col s12">
+						<p class="propertyDate">{{Date}}</p>
+						<span class="propertyTitle">{{Cost}}</span>
+						<p class="propertyMeta">{{Type}}<span class="coloredSeparator">|</span>{{Locality}}<span class="coloredSeparator">|</span>{{Area}}<span class="coloredSeparator">|</span>{{Floor}}</p>
+						<p class="propertyAddress">{{Address}}</p>
+						<p class="propertyBrokerage">{{Rescom}}|{{Brokerage}}</p>
+						<a href="whatsapp://send?text={{propertyMessage}}" data-action="share/whatsapp/share" class="hide-on-large-only"><i class="fa fa-whatsapp"></i>Share via Whatsapp</a>
+						</div>
+					</li>
+				{{/properties}}
+				{{^properties}}
+				<p class="center">No properties by this Agent</p>
+				{{/properties}}
+				</ul>
+			</div>
+		{{/data}}
+	</script>
+
+	<script id="agentRentInfoTmpl" type="x-tmpl-mustache">
+		{{#data}}
+		<section id="agentInfo" class="row grey darken-4 fixedHeader">
+			<h5 class="agentTitle">{{bname}}</h5>
+			<div class="col s4 m2 right infoLogo center">
+				<span class="material-icons circle center light-blue darken-1">{{firstCharacter}}</span>
+				{{#propertycount}}
+				<p>{{propertycount}} properties</p>
+				{{/propertycount}}
+			</div>
+			<div class="col s8 m10">
+				<h6>{{aname}}</h3>
+				<p>{{phoneno}} {{#altno}}/ {{altno}}{{/altno}}</p>
+				<address class="agentLocality">{{locality}}</address>
+				<a href="whatsapp://send?text={{message}}" data-action="share/whatsapp/share" class="hide-on-large-only"><i class="fa fa-whatsapp"></i>Share via Whatsapp</a>
+			</div>
+			<div class="col s12 row light-blue darken-1 agentTab">
+				<div class="col s6 m3"><a href="!#" class="triggerAgentSell btn col s12 light-blue darken-1" email="{{email}}">Sell</a></div>
+				<div class="col s6 m3"><a href="!#" class="triggerAgentRent btn col s12 light-blue darken-1" email="{{email}}">Rent</a></div>
+			</div>
+		</section>
+		<div class="agentProperties">
+				<ul class="collection">
+				{{#properties}}
+					<li class="collection-item row" pid="{{pid}}">
+						<div class="col s12">
+						<p class="propertyDate">{{Date}}</p>
+						<span class="propertyTitle">{{Rent}}/{{Deposite}}</span>
+						<p class="propertyMeta">{{Type}}<span class="coloredSeparator">|</span>{{Locality}}<span class="coloredSeparator">|</span>{{Area}}<span class="coloredSeparator">|</span>{{Floor}}</p>
+						<p class="propertyAddress">{{Address}}</p>
+						<p class="propertyBrokerage">{{Rescom}}|{{Brokerage}}</p>
+						<a href="whatsapp://send?text={{rentMessage}}" data-action="share/whatsapp/share" class="hide-on-large-only"><i class="fa fa-whatsapp"></i>Share via Whatsapp</a>
+						</div>
+					</li>
+				{{/properties}}
+				{{^properties}}
+				<p class="center">No properties by this Agent</p>
+				{{/properties}}
+				</ul>
+			</div>
+		{{/data}}
+	</script>
+	<script type="x-tmpl-mustache" id="commercialpropertytypes">
+		{{#data}}
+			<option value="{{type}}">{{type}}</option>
+		{{/data}}
+	</script>
+	<script type="x-tmpl-mustache" id="residentialpropertytypes">
+	{{#data}}
+		<option value="{{type}}">{{type}}</option>
+	{{/data}}
+	</script>
+
+	<section class="listView">
+		<ul id="slide-out" class="side-nav fixed grey darken-4">
+		<h6 class="row center"><span class="selectedCity"></span> - <span class="selectedTown"></span><a href="" class="changeFilter"><i class="material-icons dp48">mode_edit</i></a></h6>
+		<div class="filterArea grey darken-4 row">
+			<div class="col s12 input-field">
+				<select class="selectCity"></select>
+				<label>City:</label>
+			</div>
+			<div class="col s12 input-field">
+				<select class="selectTown"></select>
+				<label>Town:</label>
+			</div>						
+		</div>
+		<li><a href="#!" class="showAgentList highlight btn light-blue darken-1"><i class="material-icons dp48">perm_identity</i> Agent List</a></li>
+	    <li><a href="#!" class="showPropertyList highlight btn light-blue darken-1"><i class="material-icons dp48">view_module</i> Property List</a></li>
+	    <li><a class="highlight btn light-blue darken-1 modal-trigger" href="#addPropertyModal">Add Property</a></li>
+    	<p class="sidebarContent toggleAbbrevations"><span class="highlight">Abbreviations Used</span></p>
+    	<ul class="abbrlist">
+			<li>H - Higher Floor</li>
+			<li>L - Lower Floor</li>
+			<li>M - Middle Floor</li>
+			<li>T - Top Floor</li>
+			<li>G - Ground Floor</li>
+			<li>HD - Heavy Deposit</li>
+			<li>UC - Under Construction</li>
+			<li>SP - Stilt Parking</li>
+			<li>SF - Semi Furnished</li>
+			<li>GF - Garden Facing</li>
+			<li>FF Fully Furnished</li>
+			<li>FW - Full White</li>
+			<li>@ - Rate Per Sq.Ft.</li>
+			<li>OC - Occupation Certificate</li>
+			<li>MB - Master Bedroom</li>
+			<li>RF - Road Facing</li>
+			<li>AG - Agreement</li>
+		</ul>
+		<p class="sidebarContent">Looking for a Property in MIRA ROAD <br/><i class="fa fa-phone"></i> 9920964745 / 9833452109 </p>
+		<p class="sidebarContent">Powered by K-Exchange</p>
+		<p class="sidebarContent">Copyright &copy; 2015 MiraRoadAgents.com
+		<a href="disclaimer.html" target="_blank" class="highlight inlineLinks">Disclaimer</a> | <a href="TnC.html" class="highlight inlineLinks" target="_blank">Terms and Conditions</a></p>
+		</p>
+    </ul>
+	<a href="#" data-activates="slide-out" class="button-collapse hide-on-large-only"><i class="mdi-navigation-menu"></i></a>
+		<div class="searchArea agentListView module">
+			<div class="fixedHeader">
+			<h5>Agent List</h5>
+			<div class="agentSearchContainer row">
+				<input type="text" id="agentSearchContainer" placeholder="Search Name or Locality" class="col s8 m10" />
+				<span class="col s4 m2 center agentSearchCount"></span>
+			</div>
+			<div class="progress">
+				  <div class="determinate" style="width: 70%"></div>
+				</div>
+			</div>
+			<div class="agentSearchResult">
+				<ul class="collection"></ul>
+			</div>
+		</div>
+		<div class="searchArea propertyListView module">
+			<div class="fixedHeader">
+				<h5>Property List</h5>
+				<p class="appliedFilter"></p>
+				<div class="propertySearchContainer row">
+					<input type="text" id="propertySearchContainer" placeholder="Search Locality e.g. shantinagar" class="col s8 m10" />
+					<span class="col s4 m2 center propertySearchCount"></span>
+					<div class="col s12 row light-blue darken-1 propertyListTab">
+						<div class="col s4 m3"><a href="!#" class="triggerSell btn col s12 light-blue darken-1">Sell</a></div>
+						<div class="col s4 m3"><a href="!#" class="triggerRent btn col s12 light-blue darken-1">Rent</a></div>
+						<a href="!#" class="triggerSort btn col light-blue darken-1 right"><i class="material-icons dp48">swap_vert</i></a>
+						<a href="!#" class="triggerFilter btn col light-blue darken-1 right"><i class="material-icons dp48">filter_list</i></a>
+					</div>
+				</div>
+				<div class="filterSection row grey darken-4">
+					<div class="input-field col s6 m3">
+						<label class="active">Property Type</label>
+						<select id="propertyCat">
+							<option value="">Res & Com</option>
+							<option value="residential">Residential</option>
+							<option value="commercial">Commercial</option>
+						</select>
+					</div>
+					<div class="input-field col s6 m3 resproptypedd">
+						<label class="active">Type</label>
+						<select id="residentialPropertyType">
+							<option value="">All</option>
+						</select>
+					</div>
+					<div class="input-field col s6 m3 commprotypedd">
+						<label class="active">Type</label>
+						<select id="commercialPropertyType">
+							<option value="">All</option>
+						</select>
+					</div>
+					<div class="input-field col s6 m3">
+						<label>Minimum Price</label>
+						<input type="text" id="minprice" placeholder="0">
+					</div>
+					<div class="input-field col s6 m3">
+						<label>Maximum Price</label>
+						<input type="text" id="maxprice" placeholder="9000000">
+					</div>
+				    <a href="!#" class="closeFilterDialog btn col s12 light-blue darken-1">Show results</a>
+				</div>
+				<div class="row sortSection grey darken-4">
+					<div class="row">
+						<label class="active">Sort by</label>
+						<select id="sortingType">
+							<option value="">Most Recent</option>
+							<option value="asc">Cost: Low to High</option>
+							<option value="desc">Cost High to Low</option>
+						</select>
+					</div>
+				</div>
+				<div class="progress">
+				  <div class="determinate" style="width: 70%"></div>
+				</div>
+			</div>
+			<div class="propertySearchResult">
+				<ul class="collection"></ul>
+			</div>
+		</div>
+		<section class="agentInfo module">
+		
+		</section>
+	</section>
+	<div id="addPropertyModal" class="modal">
+			<div class="modal-content">
+				<h4>Hey,</h4>
+				<p>We know it takes time to Add Properties, Here we made it simple for you.</p>
+				<p>Just Whats App your Property list to 9833452109 or email it to <a href="mailto:miraroadagents@gmail.com">miraroadagents@gmail.com.</a><strong>Thats it!</strong></p>
+				<p>Your properties will be added by US! Free upto 5 properties.</p>
+				<p>For more details: Call / Whats app 9833452109 / 9920964745</p>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="closePopUp btn light-blue darken-1">Ok</a>
+			</div>
+		</div>
+	<section class="landingPage center module">
+		<div class="selected">
+			<div class="row">
+				<div class="col m4 hide-on-small-only">&nbsp;</div>
+				<div class="col m4 s12">
+					<span class="selectedCity"></span> - <span class="selectedTown"></span><a href="" class="changeFilter"><i class="material-icons dp48">mode_edit</i></a>
+					<div class="filterArea grey darken-4 row">
+						<div class="col s12 input-field">
+							<select class="selectCity"></select>
+							<label>City:</label>
+						</div>
+						<div class="col s12 input-field">
+							<select class="selectTown"></select>
+							<label>Town:</label>
+						</div>						
+					</div>
+				</div>
+				<div class="col m4 hide-on-small-only">&nbsp;</div>
+			</div>
+			<div class="row center">
+				<div class="col s12 m3 hide-on-small-only">&nbsp;</div>
+				<div class="col s12 m3">
+					<img src="images/bannerlogo.png" class="bannerImage">
+				</div>
+				<div class="col s12 m3">
+					<p class="bannerTitles">Quick, Easy &amp; Free<sup>*</sup></p>
+					<p class="bannerSubTitle">No Install, No login</p>
+					<a href="#" class="col s12 showAgentList waves-effect waves-light btn light-blue darken-1">Agent List</a>
+					<a href="#" class="col s12 showPropertyList waves-effect waves-light btn light-blue darken-1">Property List</a>
+					<a class="col s12 btn light-blue darken-1 modal-trigger waves-effect waves-light" href="#addPropertyModal">Add Property</a>
+				</div>
+				<div class="col s12 m3 hide-on-small-only">&nbsp;</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>
